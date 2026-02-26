@@ -13,10 +13,9 @@ Ein minimalistischer, im **Apple-Design** gehaltener Task-Planner. Entwickelt f√
 <p align="center">
  <img src="https://raw.githubusercontent.com/tobisoftde/Taskplanner-Pro-Free/refs/heads/main/screenshot.PNG" alt="Pro Dev Board Layout" width="800" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
  </p>
- Neue Version
+ <p align="center">Neue Version</p>
 <p align="center">
   <img src="https://github.com/tobisoftde/Taskplanner-Pro-Free/blob/main/vorschau.gif" alt="Pro Dev Board Layout" width="800" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
- 
 </p>
 ---
 
