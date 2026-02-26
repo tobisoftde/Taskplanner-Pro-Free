@@ -1,46 +1,65 @@
-# 🚀 Pro Dev Board – Local-First Kanban
-Task-Planner für Entwickler. 100 % kostenlos, 100 % privat, 100 % lokal.
+# 🚀 Pro Dev Board
+### Minimalist Local-First Kanban for Developers
 
-🚀 Pro Dev Board – Local-First Kanban
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Privacy: 100% Local](https://img.shields.io/badge/Privacy-100%25_Local-brightgreen.svg)](#)
+[![Tech: Vanilla JS](https://img.shields.io/badge/Tech-Vanilla_JS-orange.svg)](#)
 
-Ein minimalistischer, im Apple-Design gehaltener Task-Planner für Entwickler. 100 % kostenlos, 100 % privat, 100 % lokal.
-✨ Key Features
+Ein minimalistischer, im **Apple-Design** gehaltener Task-Planner. Entwickelt für Coder, die Fokus lieben und ihre Privatsphäre schätzen. 
 
-    Apple Modern UI: Hochwertiges Design mit Glassmorphism-Effekten und flüssigen Animationen.
+---
 
-    Local-First & Privacy: Alle Daten werden ausschließlich im localStorage deines Browsers gespeichert. Keine Cloud, kein Tracking, kein Login erforderlich.
+## 📺 Preview
+> **Tipp:** Füge hier einen Screenshot deines Boards ein (z.B. `![Dashboard](screenshot.png)`), um die User sofort vom Apple-Design zu überzeugen!
 
-    Smart Task Management:
+---
 
-        Drag & Drop: Intuitives Verschieben von Tasks zwischen den Status-Spalten.
+## ✨ Highlights
 
-        Detail-Modal: Füge umfangreiche Beschreibungen und Checklisten zu jedem Task hinzu.
+* **🍏 Modern Apple UI:** Hochwertiges Design mit Glassmorphism-Effekten, San Francisco Typografie und flüssigen Interaktionen.
+* **🔒 Privacy by Design:** 100% Local-First. Deine Daten verlassen nie deinen Browser (`localStorage`). Kein Tracking, kein Login, kein Backend.
+* **🛠️ Developer Workflow:**
+    * **Drag & Drop:** Tasks intuitiv verschieben.
+    * **Smart Labels:** Kategorisierung in `Feature`, `Bug` oder `Refactor`.
+    * **Task Details:** Deep-Dive mit Beschreibungen und Checklisten.
+* **📸 Social Media Export:** Generiere direkt aus dem Task-Modal ein stylisches Fortschritts-Bild (PNG) für LinkedIn oder X – perfekt für Build-in-Public!
+* **💾 JSON Backup:** Exportiere dein komplettes Projekt als Datei und importiere es auf jedem anderen Gerät.
 
-        Label-System: Kategorisiere deine Arbeit in Feature, Bug oder Refactor.
+---
 
-    Social Media Ready: Generiere mit einem Klick ein stylisches Fortschritts-Bild (PNG) deiner Tasks für LinkedIn, X oder Instagram – direkt via HTML5 Canvas.
+## 🚀 Schnellstart
 
-    Backup & Sync: Einfacher JSON-Export und -Import, um deine Daten zwischen Geräten zu sichern oder zu übertragen.
+Da dieses Projekt eine **Single-File-App** ist, bist du in Sekunden startklar:
 
-🛠️ Installation
+1.  **Repository klonen:**
+    ```bash
+    git clone [https://github.com/tobisoftde/Taskplanner-Pro-Free.git](https://github.com/tobisoftde/Taskplanner-Pro-Free.git)
+    ```
+2.  **Starten:**
+    Öffne die `index.html` einfach per Doppelklick in deinem Lieblingsbrowser.
+3.  **Loslegen:**
+    Kein `npm install`, kein `build` – einfach fokussiert arbeiten.
 
-Da dieses Projekt nur aus einer einzigen HTML-Datei besteht, ist keine Installation notwendig:
+---
 
-    Klone das Repository: git clone [https://github.com/Taskplanner-Pro-Free/pro-dev-board.git](https://github.com/tobisoftde/Taskplanner-Pro-Free.git)
+## 💡 Philosophie
+In einer Welt voller überladener SaaS-Abos bietet das **Pro Dev Board** puren Fokus. Es ist das digitale Äquivalent zu einem sauberen Schreibtisch: Nur du, dein Code und deine nächsten Schritte.
 
-    Öffne die index.html in einem beliebigen modernen Browser.
+---
 
-    Fertig.
+## 🛠 Tech Stack
 
-💡 Warum dieses Tool?
+| Komponente | Technologie |
+| :--- | :--- |
+| **Frontend** | HTML5 & CSS3 (Grid/Flexbox) |
+| **Logic** | Vanilla JavaScript (ES6+) |
+| **Storage** | Browser LocalStorage API |
+| **Graphics** | HTML5 Canvas API (Social Export) |
 
-In einer Welt voller überladener SaaS-Tools bietet das Pro Dev Board genau das, was du zum Coden brauchst: Fokus. Es ist perfekt für Solo-Entwickler, die ihre täglichen Schritte tracken wollen, ohne sich mit komplexen Workflows herumzuschlagen.
-🛠 Tech Stack
+---
 
-    HTML5 & CSS3 (Flexbox, Grid, Glassmorphism)
+## 📄 Lizenz
+Dieses Projekt ist unter der MIT-Lizenz lizenziert – nutze es, verändere es, teile es!
 
-    Vanilla JavaScript (No Frameworks, No Dependencies)
-
-    Canvas API (Für den Social Media Export)
-
-    Browser Storage API (Persistence)
+---
+*Created with ❤️ for the Developer Community.*
