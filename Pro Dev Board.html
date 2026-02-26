@@ -3,262 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Dev Board</title>
+    <title>Pro Dev Workspace</title>
     <style>
+        /* --- Themes --- */
         :root {
             --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             --glass: rgba(255, 255, 255, 0.65);
             --glass-border: rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --modal-bg: #ffffff;
+            --input-bg: rgba(255, 255, 255, 0.8);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --text-main: #1d1d1f;
+            --text-muted: #86868b;
+            --hover-bg: #e8e8ed;
             --apple-blue: #007aff;
             --apple-red: #ff3b30;
             --apple-green: #34c759;
-            --apple-purple: #5856d6;
-            --text-main: #1d1d1f;
-            --text-muted: #86868b;
-            --radius-xl: 24px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
+            --radius-xl: 24px; --radius-lg: 16px; --radius-md: 12px;
         }
 
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #1c1c1e 0%, #000000 100%);
+            --glass: rgba(30, 30, 32, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(44, 44, 46, 0.9);
+            --modal-bg: #1c1c1e;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f5f5f7;
+            --text-muted: #a1a1a6;
+            --hover-bg: #3a3a3c;
+        }
+
+        /* --- Base --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            margin: 0;
-            padding: 30px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            background: var(--bg-gradient); background-attachment: fixed; color: var(--text-main);
+            margin: 0; padding: 30px; height: 100vh; display: flex; flex-direction: column;
+            box-sizing: border-box; overflow: hidden; transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 0 10px;
+        /* --- Header --- */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+
+        .btn-icon {
+            background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);
+            padding: 10px 16px; border-radius: 20px; cursor: pointer; font-weight: 600;
+            backdrop-filter: blur(10px); transition: all 0.2s; display: flex; align-items: center; gap: 8px;
         }
+        .btn-icon:hover { transform: scale(1.02); filter: brightness(1.1); }
+        .btn-kbd { font-family: monospace; font-size: 10px; background: var(--input-border); padding: 2px 6px; border-radius: 4px; margin-left: 5px; opacity: 0.7; }
 
         #projectName {
-            font-size: 34px;
-            font-weight: 800;
-            border: none;
-            background: transparent;
-            outline: none;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
-            transition: opacity 0.2s;
+            font-size: 34px; font-weight: 800; border: none; background: transparent;
+            color: var(--text-main); outline: none; letter-spacing: -0.5px; transition: opacity 0.2s;
         }
         #projectName:focus { opacity: 0.7; }
 
         .status-badge {
-            font-size: 13px;
-            font-weight: 500;
-            background: rgba(255,255,255,0.8);
-            padding: 6px 14px;
-            border-radius: 20px;
-            color: var(--text-muted);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            backdrop-filter: blur(10px);
+            font-size: 13px; font-weight: 500; background: var(--glass);
+            padding: 6px 14px; border-radius: 20px; color: var(--text-muted);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); backdrop-filter: blur(10px);
         }
 
-        /* Board Layout */
-        .board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-
+        /* --- Board --- */
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; flex-grow: 1; overflow: hidden; }
         .column {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: var(--radius-xl);
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-            height: 100%;
-        }
-
-        .column-header {
-            padding: 20px 24px;
-            font-weight: 700;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-        }
-
-        .task-list {
-            padding: 0 20px 20px 20px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        /* Task Cards */
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: var(--radius-lg);
-            padding: 18px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            cursor: pointer; /* Changed to pointer for click focus */
-            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s;
-            border: 1px solid rgba(0,0,0,0.02);
+            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: var(--radius-xl); display: flex; flex-direction: column;
+            border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); height: 100%;
             position: relative;
         }
+        .column-header { padding: 20px 24px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
+        .task-list { padding: 0 20px 20px 20px; flex-grow: 1; overflow-y: auto; }
 
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; border: 1px solid var(--glass-border); color: var(--text-main);
         }
-
-        .card.dragging {
-            opacity: 0.6;
-            transform: scale(0.95);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-
+        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card.dragging { opacity: 0.5; transform: scale(0.95); border: 2px dashed var(--apple-blue); }
         .card-text { font-size: 16px; font-weight: 600; margin-bottom: 14px; line-height: 1.4; }
-
         .card-meta { display: flex; justify-content: space-between; align-items: center; }
 
-        .tag {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+        .tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; }
         .tag-feature { background: #e0f2fe; color: #0284c7; }
         .tag-bug { background: #fee2e2; color: #dc2626; }
         .tag-refactor { background: #f3e8ff; color: #9333ea; }
+        [data-theme="dark"] .tag-feature { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+        [data-theme="dark"] .tag-bug { background: rgba(220, 38, 38, 0.2); color: #f87171; }
+        [data-theme="dark"] .tag-refactor { background: rgba(147, 51, 234, 0.2); color: #c084fc; }
 
-        .progress-indicator {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Inputs */
-        .add-zone { padding: 20px; border-top: 1px solid rgba(0,0,0,0.04); }
+        /* --- Inputs & Buttons --- */
+        .add-zone { padding: 20px; border-top: 1px solid var(--glass-border); }
         .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         
-        input[type="text"] {
-            width: 100%;
-            background: rgba(255,255,255,0.8);
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            outline: none;
-            font-size: 14px;
-            transition: background 0.2s;
-            box-sizing: border-box;
+        input[type="text"], select, textarea {
+            width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
+            color: var(--text-main); padding: 12px 16px; border-radius: var(--radius-md);
+            outline: none; font-size: 14px; box-sizing: border-box; transition: 0.2s;
         }
-        input[type="text"]:focus { background: #fff; border-color: var(--apple-blue); }
-
-        select, button {
-            padding: 10px;
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(0,0,0,0.1);
-            outline: none;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background: var(--apple-blue);
-            color: white;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 10px 18px;
-        }
+        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--apple-blue); }
+        button { padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--input-border); outline: none; font-size: 14px; }
+        
+        .btn-primary { background: var(--apple-blue); color: white; border: none; font-weight: 600; cursor: pointer; padding: 10px 18px; }
         .btn-primary:hover { opacity: 0.9; }
 
-        /* Modal (Detail View) */
+        /* --- Modals --- */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100;
         }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
 
         .modal {
-            background: #fff;
-            width: 90%;
-            max-width: 500px;
-            border-radius: var(--radius-xl);
-            padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            transform: translateY(20px) scale(0.95);
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-height: 85vh;
-            overflow-y: auto;
+            background: var(--modal-bg); color: var(--text-main); width: 90%; max-width: 550px;
+            border-radius: var(--radius-xl); padding: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transform: translateY(20px) scale(0.95); transition: all 0.3s;
+            display: flex; flex-direction: column; gap: 20px; max-height: 85vh; overflow-y: auto;
+            border: 1px solid var(--glass-border);
         }
         .modal-overlay.active .modal { transform: translateY(0) scale(1); }
-
         .modal h2 { margin: 0; font-size: 22px; outline: none; }
         
-        .modal textarea {
-            width: 100%;
-            min-height: 100px;
-            background: #f5f5f7;
-            border: none;
-            border-radius: var(--radius-md);
-            padding: 16px;
-            font-family: inherit;
-            font-size: 15px;
-            resize: vertical;
-            outline: none;
-            box-sizing: border-box;
+        /* Markdown & Textarea */
+        .desc-container { position: relative; }
+        .md-preview { 
+            min-height: 100px; padding: 16px; background: var(--input-bg); 
+            border-radius: var(--radius-md); font-size: 14px; line-height: 1.5;
+            cursor: text; border: 1px solid transparent;
         }
+        .md-preview:hover { border-color: var(--input-border); }
+        .md-preview pre { background: #1e1e1e; color: #d4d4d4; padding: 10px; border-radius: 8px; overflow-x: auto; margin: 5px 0; }
+        .md-preview code { font-family: monospace; background: rgba(128,128,128,0.2); padding: 2px 4px; border-radius: 4px; color: var(--apple-red); }
+        .md-preview pre code { background: none; padding: 0; color: inherit; }
+        
+        textarea#modalDesc { display: none; min-height: 120px; font-family: monospace; }
+        textarea#modalDesc.active { display: block; }
+        .md-preview.hidden { display: none; }
 
-        /* Checklist */
+        /* --- Checklist --- */
         .checklist { display: flex; flex-direction: column; gap: 8px; }
         .check-item { display: flex; align-items: center; gap: 10px; }
-        .check-item input[type="checkbox"] {
-            width: 18px; height: 18px;
-            accent-color: var(--apple-blue);
-            cursor: pointer;
-        }
-        .check-item span { font-size: 15px; }
+        .check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--apple-blue); cursor: pointer; }
         .check-item.done span { text-decoration: line-through; color: var(--text-muted); }
 
         .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; }
-        .btn-close { background: #f2f2f7; color: var(--text-main); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+        .btn-close { background: var(--input-bg); color: var(--text-main); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
         .btn-social { background: linear-gradient(135deg, #FF2D55 0%, #5856D6 100%); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
 
-        .footer { position: fixed; bottom: 20px; right: 30px; display: flex; gap: 10px; }
-        .btn-ghost { background: var(--glass); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 13px; backdrop-filter: blur(10px); }
+        /* --- Trash & Projects --- */
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; background: var(--input-bg); border-radius: var(--radius-md);
+            margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 2px solid transparent;
+        }
+        .list-item:hover { background: var(--hover-bg); }
+        .list-item.active { border-color: var(--apple-blue); background: rgba(0, 122, 255, 0.1); }
+        
+        .footer { position: fixed; bottom: 20px; right: 30px; display: flex; gap: 10px; z-index: 50; }
+
+        /* Confetti Canvas */
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
     </style>
 </head>
 <body>
 
+<canvas id="confetti-canvas"></canvas>
+
 <header>
-    <input type="text" id="projectName" value="Mein Dev Projekt" oninput="save()">
-    <span class="status-badge" id="saveStatus">Alles synchron</span>
+    <div class="header-left">
+        <button class="btn-icon" onclick="openProjectManager()">
+            📚 Workspaces <span class="btn-kbd">⌘B</span>
+        </button>
+        <input type="text" id="projectName" value="Loading..." oninput="save()">
+    </div>
+    <div class="header-right">
+        <span class="status-badge" id="saveStatus">Alles synchron</span>
+        <button class="btn-icon" onclick="openTrash()">🗑️ <span id="trashCount">0</span></button>
+        <button class="btn-icon" id="themeToggle" onclick="toggleTheme()" style="padding: 10px; border-radius: 50%;">🌙</button>
+    </div>
 </header>
 
 <div class="board">
@@ -267,7 +198,7 @@
         <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
         <div class="add-zone">
             <div class="input-group">
-                <input type="text" id="input-todo" placeholder="Was steht an?" onkeypress="handleEnter(event, 'todo')">
+                <input type="text" id="input-todo" placeholder="Was steht an? (Cmd/Ctrl + K)" onkeypress="handleEnter(event, 'todo')">
             </div>
             <div class="input-group" style="margin-bottom:0">
                 <select id="tag-todo" style="flex-grow:1"><option value="feature">Feature</option><option value="bug">Bug</option><option value="refactor">Refactor</option></select>
@@ -275,12 +206,10 @@
             </div>
         </div>
     </div>
-
     <div class="column" data-status="working">
         <div class="column-header">In Arbeit</div>
         <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     </div>
-
     <div class="column" data-status="done">
         <div class="column-header">Erledigt</div>
         <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
@@ -288,8 +217,8 @@
 </div>
 
 <div class="footer">
-    <button class="btn-ghost" onclick="exportJSON()">Backup speichern</button>
-    <button class="btn-ghost" onclick="document.getElementById('fileIn').click()">Backup laden</button>
+    <button class="btn-icon" style="font-size: 13px;" onclick="exportJSON()">💾 Backup</button>
+    <button class="btn-icon" style="font-size: 13px;" onclick="document.getElementById('fileIn').click()">📂 Laden</button>
     <input type="file" id="fileIn" style="display:none" accept=".json" onchange="importJSON(event)">
 </div>
 
@@ -297,298 +226,375 @@
     <div class="modal" onclick="event.stopPropagation()">
         <h2 contenteditable="true" id="modalTitle" onblur="saveModal()">Task Titel</h2>
         
-        <div>
-            <label style="font-size:12px; color:#86868b; font-weight:600; text-transform:uppercase; display:block; margin-bottom:8px;">Beschreibung</label>
-            <textarea id="modalDesc" placeholder="Füge Details, Notizen oder Snippets hinzu..." onblur="saveModal()"></textarea>
+        <div class="desc-container">
+            <label style="font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Beschreibung (Markdown Support)</label>
+            <div id="mdPreview" class="md-preview" onclick="editDescription()">Klicke hier um Notizen oder Code-Snippets hinzuzufügen...</div>
+            <textarea id="modalDesc" placeholder="Schreibe in Markdown (z.B. **fett**, `code`, ```block```)..." onblur="saveDescription()"></textarea>
         </div>
 
         <div>
-            <label style="font-size:12px; color:#86868b; font-weight:600; text-transform:uppercase; display:block; margin-bottom:8px;">Checkliste</label>
+            <label style="font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Checkliste</label>
             <div class="checklist" id="modalChecklist"></div>
             <div class="input-group" style="margin-top: 10px;">
                 <input type="text" id="newChecklistItem" placeholder="Neuer Teilschritt..." onkeypress="if(event.key==='Enter') addChecklistItem()">
                 <button class="btn-primary" onclick="addChecklistItem()">+</button>
             </div>
         </div>
-
         <div class="modal-actions">
-            <button class="btn-close" onclick="closeModal(true)">Schließen</button>
-            <button class="btn-social" onclick="generateSocialImage()">🎨 Social Image generieren</button>
-            <button class="btn-close" style="color:var(--apple-red); background:#fee2e2;" onclick="deleteCurrentTask()">Löschen</button>
+            <button class="btn-close" onclick="closeModal(true)">Schließen <span class="btn-kbd">ESC</span></button>
+            <button class="btn-social" onclick="generateSocialImage()">🎨 Social Image</button>
+            <button class="btn-close" style="color:var(--apple-red); background:rgba(255,59,48,0.1);" onclick="deleteCurrentTask()">Löschen</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="projectModal" onclick="closeProjectModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <h2>Deine Workspaces</h2>
+        <div id="projectList" style="margin: 15px 0; max-height: 300px; overflow-y: auto;"></div>
+        <div class="input-group">
+            <input type="text" id="newProjectName" placeholder="Neues Projekt..." onkeypress="if(event.key==='Enter') createNewProject()">
+            <button class="btn-primary" onclick="createNewProject()">Erstellen</button>
+        </div>
+        <div class="modal-actions" style="justify-content: flex-end;">
+            <button class="btn-close" onclick="closeProjectModal(true)">Schließen <span class="btn-kbd">ESC</span></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="trashModal" onclick="closeTrashModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <h2>Papierkorb 🗑️</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 0;">Die letzten 10 gelöschten Tasks.</p>
+        <div id="trashList" style="margin: 15px 0; max-height: 300px; overflow-y: auto;"></div>
+        <div class="modal-actions" style="justify-content: space-between;">
+            <button class="btn-close" style="color:var(--apple-red); background:rgba(255,59,48,0.1);" onclick="emptyTrash()">Entgültig leeren</button>
+            <button class="btn-close" onclick="closeTrashModal(true)">Schließen <span class="btn-kbd">ESC</span></button>
         </div>
     </div>
 </div>
 
 <script>
-    let state = JSON.parse(localStorage.getItem('proDevBoard')) || {
-        name: "Mein Dev Projekt",
-        tasks: []
+    // --- Data & State ---
+    let appData = JSON.parse(localStorage.getItem('proDevWorkspace')) || {
+        activeId: 'proj_1',
+        projects: { 'proj_1': { name: "Mein Dev Projekt", tasks: [] } },
+        theme: 'light',
+        trash: [] // Archiv für gelöschte Tasks
     };
     let currentOpenTaskId = null;
 
+    function getCurrentProject() { return appData.projects[appData.activeId]; }
+
+    // --- 1. Keyboard Shortcuts (Pro-Mode) ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closeModal(true); closeProjectModal(true); closeTrashModal(true); }
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); document.getElementById('input-todo').focus(); }
+        if ((e.metaKey || e.ctrlKey) && e.key === 'b') { e.preventDefault(); openProjectManager(); }
+    });
+
+    // --- 2. Confetti Gamification ---
+    let particles = [];
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function fireConfetti() {
+        const colors = ['#007aff', '#34c759', '#ffcc00', '#ff3b30', '#5856d6'];
+        for(let i=0; i<100; i++) {
+            particles.push({
+                x: canvas.width / 2, y: canvas.height / 2,
+                vx: (Math.random() - 0.5) * 20, vy: (Math.random() - 1) * 20,
+                size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)],
+                life: 1
+            });
+        }
+        if(particles.length <= 100) requestAnimationFrame(renderConfetti);
+    }
+
+    function renderConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, index) => {
+            p.x += p.vx; p.y += p.vy; p.vy += 0.5;
+            p.life -= 0.02;
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+            if(p.life <= 0) particles.splice(index, 1);
+        });
+        ctx.globalAlpha = 1;
+        if(particles.length > 0) requestAnimationFrame(renderConfetti);
+    }
+
     // --- Drag & Drop ---
     function allowDrop(ev) { ev.preventDefault(); }
-    
-    function drag(ev) {
-        ev.dataTransfer.setData("taskId", ev.currentTarget.id);
-        ev.currentTarget.classList.add('dragging');
-    }
-    
+    function drag(ev) { ev.dataTransfer.setData("taskId", ev.currentTarget.id); ev.currentTarget.classList.add('dragging'); }
     function drop(ev) {
         ev.preventDefault();
         const taskId = ev.dataTransfer.getData("taskId").replace('task-', '');
         const targetList = ev.target.closest('.task-list');
-        
         if (targetList) {
             const newStatus = targetList.parentElement.getAttribute('data-status');
-            const taskObj = state.tasks.find(t => t.id == taskId);
+            const taskObj = getCurrentProject().tasks.find(t => t.id == taskId);
             if (taskObj && taskObj.status !== newStatus) {
-                taskObj.status = newStatus;
-                save();
-                render();
+                taskObj.status = newStatus; save(); render();
+                if(newStatus === 'done') fireConfetti();
             }
         }
         document.querySelectorAll('.card').forEach(c => c.classList.remove('dragging'));
     }
 
-    // --- CRUD Tasks ---
-    function handleEnter(e, status) { if(e.key === 'Enter') addTask(status); }
-
-    function addTask(status) {
-        const input = document.getElementById(`input-${status}`);
-        const tag = document.getElementById(`tag-${status}`);
-        if (!input.value.trim()) return;
-
-        state.tasks.push({
-            id: Date.now(),
-            text: input.value,
-            tag: tag.value,
-            status: status,
-            desc: "",
-            checklist: []
-        });
-        
-        input.value = '';
-        save();
-        render();
+    // --- 3. Markdown Support ---
+    function parseMarkdown(text) {
+        if(!text) return "Klicke hier um Notizen oder Code-Snippets hinzuzufügen...";
+        return text.replace(/</g, "&lt;").replace(/>/g, "&gt;") 
+            .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>') 
+            .replace(/`([^`]+)`/g, '<code>$1</code>') 
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>') 
+            .replace(/\n/g, '<br>'); 
     }
 
-    // --- Modal Logic ---
-    function openModal(id) {
-        currentOpenTaskId = id;
-        const task = state.tasks.find(t => t.id === id);
-        
-        document.getElementById('modalTitle').innerText = task.text;
-        document.getElementById('modalDesc').value = task.desc || "";
-        renderChecklist(task);
-        
-        document.getElementById('taskModal').classList.add('active');
+    function editDescription() {
+        document.getElementById('mdPreview').classList.add('hidden');
+        const textarea = document.getElementById('modalDesc');
+        textarea.classList.add('active'); textarea.focus();
     }
 
-    function closeModal(force = false) {
-        if (force || event.target.id === 'taskModal') {
-            saveModal();
-            document.getElementById('taskModal').classList.remove('active');
-            currentOpenTaskId = null;
+    function saveDescription() {
+        const textarea = document.getElementById('modalDesc');
+        const preview = document.getElementById('mdPreview');
+        textarea.classList.remove('active'); preview.classList.remove('hidden');
+        preview.innerHTML = parseMarkdown(textarea.value);
+        saveModal();
+    }
+
+    // --- 4. Papierkorb / Undo ---
+    function updateTrashCounter() {
+        if(!appData.trash) appData.trash = [];
+        document.getElementById('trashCount').innerText = appData.trash.length;
+    }
+
+    function openTrash() {
+        const list = document.getElementById('trashList'); list.innerHTML = '';
+        if(appData.trash.length === 0) {
+            list.innerHTML = '<p style="color:var(--text-muted);text-align:center;">Papierkorb ist leer.</p>';
+        } else {
+            appData.trash.forEach((task, index) => {
+                const div = document.createElement('div'); div.className = 'list-item';
+                div.innerHTML = `
+                    <div style="flex-grow:1;"><strong>${task.text}</strong> <br><small style="color:var(--text-muted)">Projekt: ${task.projectName}</small></div>
+                    <button class="btn-primary" style="padding: 6px 12px; font-size:12px;" onclick="restoreTask(${index})">Wiederherstellen</button>
+                `;
+                list.appendChild(div);
+            });
         }
+        document.getElementById('trashModal').classList.add('active');
     }
 
-    function saveModal() {
-        if (!currentOpenTaskId) return;
-        const task = state.tasks.find(t => t.id === currentOpenTaskId);
-        if (task) {
-            task.text = document.getElementById('modalTitle').innerText;
-            task.desc = document.getElementById('modalDesc').value;
-            save();
-            render();
-        }
+    function closeTrashModal(force = false) {
+        if (force || event.target.id === 'trashModal') document.getElementById('trashModal').classList.remove('active');
+    }
+
+    function restoreTask(index) {
+        const task = appData.trash[index];
+        if(!task.checklist) task.checklist = [];
+        getCurrentProject().tasks.push(task);
+        appData.trash.splice(index, 1);
+        save(); render(); openTrash(); 
     }
 
     function deleteCurrentTask() {
-        if(confirm("Task wirklich löschen?")) {
-            state.tasks = state.tasks.filter(t => t.id !== currentOpenTaskId);
-            save();
-            render();
-            closeModal(true);
+        const task = getCurrentProject().tasks.find(t => t.id === currentOpenTaskId);
+        if(task) {
+            task.projectName = getCurrentProject().name;
+            if(!appData.trash) appData.trash = [];
+            appData.trash.unshift(task); 
+            if(appData.trash.length > 10) appData.trash.pop(); 
+            
+            getCurrentProject().tasks = getCurrentProject().tasks.filter(t => t.id !== currentOpenTaskId);
+            save(); render(); closeModal(true);
         }
     }
 
-    // --- Checklist Logic ---
-    function renderChecklist(task) {
-        const container = document.getElementById('modalChecklist');
-        container.innerHTML = '';
-        
-        (task.checklist || []).forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = `check-item ${item.done ? 'done' : ''}`;
+    function emptyTrash() {
+        if (appData.trash.length === 0) return;
+        if (confirm("Möchtest du den Papierkorb wirklich unwiderruflich leeren?")) {
+            appData.trash = [];
+            save();
+            openTrash(); // Ansicht aktualisieren
+        }
+    }
+
+
+    // --- Core Logic ---
+    function initTheme() {
+        if (appData.theme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); document.getElementById('themeToggle').innerText = '☀️'; } 
+        else { document.documentElement.removeAttribute('data-theme'); document.getElementById('themeToggle').innerText = '🌙'; }
+    }
+    function toggleTheme() {
+        appData.theme = appData.theme === 'light' ? 'dark' : 'light';
+        save(); initTheme();
+    }
+
+    function openProjectManager() {
+        const list = document.getElementById('projectList'); list.innerHTML = '';
+        Object.keys(appData.projects).forEach(projId => {
+            const proj = appData.projects[projId]; const isActive = projId === appData.activeId;
+            const div = document.createElement('div'); div.className = `list-item ${isActive ? 'active' : ''}`;
             div.innerHTML = `
-                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklist(${index})">
-                <span>${item.text}</span>
+                <div style="flex-grow:1; font-weight:600;" onclick="switchProject('${projId}')">${isActive ? '🟢 ' : '⚪️ '} ${proj.name}</div>
+                ${Object.keys(appData.projects).length > 1 ? `<button class="btn-primary" style="background:none; color:var(--apple-red); border:none; padding:0; font-size:18px;" onclick="deleteProject('${projId}', event)">&times;</button>` : ''}
             `;
+            list.appendChild(div);
+        });
+        document.getElementById('projectModal').classList.add('active');
+    }
+    function closeProjectModal(force = false) { if (force || event.target.id === 'projectModal') document.getElementById('projectModal').classList.remove('active'); }
+    function createNewProject() {
+        const name = document.getElementById('newProjectName').value.trim(); if (!name) return;
+        const newId = 'proj_' + Date.now();
+        appData.projects[newId] = { name: name, tasks: [] }; appData.activeId = newId;
+        document.getElementById('newProjectName').value = ''; save(); init(); openProjectManager(); closeProjectModal(true);
+    }
+    function switchProject(id) { appData.activeId = id; save(); init(); closeProjectModal(true); }
+    function deleteProject(id, event) {
+        event.stopPropagation();
+        if(confirm(`Workspace "${appData.projects[id].name}" wirklich löschen?`)) {
+            delete appData.projects[id];
+            if(appData.activeId === id) appData.activeId = Object.keys(appData.projects)[0];
+            save(); init(); openProjectManager();
+        }
+    }
+
+    function handleEnter(e, status) { if(e.key === 'Enter') addTask(status); }
+    function addTask(status) {
+        const input = document.getElementById(`input-${status}`); const tag = document.getElementById(`tag-${status}`);
+        if (!input.value.trim()) return;
+        getCurrentProject().tasks.push({ id: Date.now(), text: input.value, tag: tag.value, status: status, desc: "", checklist: [] });
+        input.value = ''; save(); render();
+    }
+
+    function openModal(id) {
+        currentOpenTaskId = id;
+        const task = getCurrentProject().tasks.find(t => t.id === id);
+        document.getElementById('modalTitle').innerText = task.text;
+        
+        const textarea = document.getElementById('modalDesc');
+        const preview = document.getElementById('mdPreview');
+        textarea.value = task.desc || "";
+        textarea.classList.remove('active'); preview.classList.remove('hidden');
+        preview.innerHTML = parseMarkdown(task.desc);
+
+        renderChecklist(task); document.getElementById('taskModal').classList.add('active');
+    }
+    function closeModal(force = false) {
+        if (force || event.target.id === 'taskModal') { saveModal(); document.getElementById('taskModal').classList.remove('active'); currentOpenTaskId = null; }
+    }
+    function saveModal() {
+        if (!currentOpenTaskId) return;
+        const task = getCurrentProject().tasks.find(t => t.id === currentOpenTaskId);
+        if (task) { task.text = document.getElementById('modalTitle').innerText; task.desc = document.getElementById('modalDesc').value; save(); render(); }
+    }
+
+    function renderChecklist(task) {
+        const container = document.getElementById('modalChecklist'); container.innerHTML = '';
+        (task.checklist || []).forEach((item, index) => {
+            const div = document.createElement('div'); div.className = `check-item ${item.done ? 'done' : ''}`;
+            div.innerHTML = `<input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklist(${index})"><span>${item.text}</span>`;
             container.appendChild(div);
         });
     }
-
     function addChecklistItem() {
-        const input = document.getElementById('newChecklistItem');
-        if (!input.value.trim() || !currentOpenTaskId) return;
-
-        const task = state.tasks.find(t => t.id === currentOpenTaskId);
-        if (!task.checklist) task.checklist = [];
-        
-        task.checklist.push({ text: input.value, done: false });
-        input.value = '';
-        save();
-        renderChecklist(task);
-        render();
+        const input = document.getElementById('newChecklistItem'); if (!input.value.trim() || !currentOpenTaskId) return;
+        const task = getCurrentProject().tasks.find(t => t.id === currentOpenTaskId);
+        if (!task.checklist) task.checklist = []; task.checklist.push({ text: input.value, done: false });
+        input.value = ''; save(); renderChecklist(task); render();
     }
-
     function toggleChecklist(index) {
-        const task = state.tasks.find(t => t.id === currentOpenTaskId);
-        task.checklist[index].done = !task.checklist[index].done;
-        save();
-        renderChecklist(task);
-        render();
+        const task = getCurrentProject().tasks.find(t => t.id === currentOpenTaskId);
+        task.checklist[index].done = !task.checklist[index].done; save(); renderChecklist(task); render();
     }
 
-    // --- Social Image Generation (Canvas) ---
-    function generateSocialImage() {
-        if (!currentOpenTaskId) return;
-        const task = state.tasks.find(t => t.id === currentOpenTaskId);
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = 1080;
-        canvas.height = 1080;
-        const ctx = canvas.getContext('2d');
-
-        // Draw Gradient Background
-        const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
-        grad.addColorStop(0, '#007aff');
-        grad.addColorStop(1, '#5856d6');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 1080, 1080);
-
-        // Draw Card
-        ctx.fillStyle = 'white';
-        ctx.shadowColor = 'rgba(0,0,0,0.2)';
-        ctx.shadowBlur = 40;
-        ctx.beginPath();
-        ctx.roundRect(140, 340, 800, 400, 40);
-        ctx.fill();
-
-        // Draw Tag
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = task.tag === 'bug' ? '#fee2e2' : (task.tag === 'feature' ? '#e0f2fe' : '#f3e8ff');
-        ctx.beginPath();
-        ctx.roundRect(190, 390, 150, 50, 25);
-        ctx.fill();
-        
-        ctx.fillStyle = task.tag === 'bug' ? '#dc2626' : (task.tag === 'feature' ? '#0284c7' : '#9333ea');
-        ctx.font = 'bold 24px -apple-system, sans-serif';
-        ctx.fillText(task.tag.toUpperCase(), 215, 425);
-
-        // Draw Text
-        ctx.fillStyle = '#1d1d1f';
-        ctx.font = 'bold 50px -apple-system, sans-serif';
-        // Simple word wrap
-        const words = task.text.split(' ');
-        let line = '';
-        let y = 520;
-        for(let n = 0; n < words.length; n++) {
-            let testLine = line + words[n] + ' ';
-            let metrics = ctx.measureText(testLine);
-            if(metrics.width > 700 && n > 0) {
-                ctx.fillText(line, 190, y);
-                line = words[n] + ' ';
-                y += 60;
-            } else {
-                line = testLine;
-            }
-        }
-        ctx.fillText(line, 190, y);
-
-        // Draw Project Name
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        ctx.font = '30px -apple-system, sans-serif';
-        ctx.fillText("Code Lesson: " + state.name, 140, 290);
-
-        // Export
-        const link = document.createElement('a');
-        link.download = `Lesson_Update_${task.id}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    }
-
-    // --- Core Sync ---
     function save() {
-        state.name = document.getElementById('projectName').value;
-        localStorage.setItem('proDevBoard', JSON.stringify(state));
-        
+        getCurrentProject().name = document.getElementById('projectName').value;
+        localStorage.setItem('proDevWorkspace', JSON.stringify(appData));
+        updateTrashCounter();
         const badge = document.getElementById('saveStatus');
         badge.innerText = 'Gespeichert: ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        badge.style.background = 'rgba(52, 199, 89, 0.2)'; // Flash green
-        setTimeout(() => badge.style.background = 'rgba(255,255,255,0.8)', 1000);
+        badge.style.background = 'rgba(52, 199, 89, 0.2)';
+        setTimeout(() => badge.style.background = 'var(--glass)', 1000);
     }
 
     function render() {
-        const lists = document.querySelectorAll('.task-list');
-        lists.forEach(l => l.innerHTML = '');
-
-        state.tasks.forEach(task => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.id = `task-${task.id}`;
-            card.draggable = true;
-            card.ondragstart = drag;
-            card.ondragend = (e) => e.target.classList.remove('dragging');
+        const lists = document.querySelectorAll('.task-list'); lists.forEach(l => l.innerHTML = '');
+        getCurrentProject().tasks.forEach(task => {
+            const card = document.createElement('div'); card.className = 'card'; card.id = `task-${task.id}`; card.draggable = true;
+            card.ondragstart = drag; card.ondragend = (e) => e.target.classList.remove('dragging');
             card.onclick = () => openModal(task.id);
 
             const checkCount = task.checklist ? task.checklist.length : 0;
             const checkDone = task.checklist ? task.checklist.filter(c => c.done).length : 0;
-            
             let metaHtml = `<span class="tag tag-${task.tag}">${task.tag}</span>`;
-            if (checkCount > 0 || task.desc) {
-                metaHtml += `<div class="progress-indicator">
-                    ${task.desc ? '📝' : ''} 
-                    ${checkCount > 0 ? `☑️ ${checkDone}/${checkCount}` : ''}
-                </div>`;
-            }
-
-            card.innerHTML = `
-                <div class="card-text">${task.text}</div>
-                <div class="card-meta">${metaHtml}</div>
-            `;
-
+            if (checkCount > 0 || task.desc) { metaHtml += `<div class="progress-indicator">${task.desc ? '📝' : ''} ${checkCount > 0 ? `☑️ ${checkDone}/${checkCount}` : ''}</div>`; }
+            card.innerHTML = `<div class="card-text">${task.text}</div><div class="card-meta">${metaHtml}</div>`;
             const targetCol = document.querySelector(`.column[data-status="${task.status}"] .task-list`);
             if (targetCol) targetCol.appendChild(card);
         });
     }
 
-    // --- JSON Backup ---
     function exportJSON() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-        const link = document.createElement('a');
-        link.href = dataStr;
-        link.download = `DevBoard_${state.name}.json`;
-        link.click();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+        const link = document.createElement('a'); link.href = dataStr; link.download = `DevWorkspace_Backup_${new Date().toISOString().split('T')[0]}.json`; link.click();
     }
-
     function importJSON(ev) {
-        const file = ev.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            state = JSON.parse(e.target.result);
-            document.getElementById('projectName').value = state.name;
-            save();
-            render();
-        };
+        const file = ev.target.files[0]; const reader = new FileReader();
+        reader.onload = (e) => { appData = JSON.parse(e.target.result); initTheme(); init(); };
         reader.readAsText(file);
     }
+    
+    function generateSocialImage() {
+        if (!currentOpenTaskId) return;
+        const task = getCurrentProject().tasks.find(t => t.id === currentOpenTaskId);
+        const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1080;
+        const ctx = canvas.getContext('2d');
 
-    // Init
-    document.getElementById('projectName').value = state.name;
-    render();
+        const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+        if(appData.theme === 'dark') { grad.addColorStop(0, '#1c1c1e'); grad.addColorStop(1, '#000000'); } 
+        else { grad.addColorStop(0, '#007aff'); grad.addColorStop(1, '#5856d6'); }
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, 1080, 1080);
+
+        ctx.fillStyle = appData.theme === 'dark' ? '#2c2c2e' : 'white'; 
+        ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 40;
+        ctx.beginPath(); ctx.roundRect(140, 340, 800, 400, 40); ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = task.tag === 'bug' ? '#fee2e2' : (task.tag === 'feature' ? '#e0f2fe' : '#f3e8ff');
+        ctx.beginPath(); ctx.roundRect(190, 390, 150, 50, 25); ctx.fill();
+        
+        ctx.fillStyle = task.tag === 'bug' ? '#dc2626' : (task.tag === 'feature' ? '#0284c7' : '#9333ea');
+        ctx.font = 'bold 24px -apple-system, sans-serif'; ctx.fillText(task.tag.toUpperCase(), 215, 425);
+
+        ctx.fillStyle = appData.theme === 'dark' ? '#ffffff' : '#1d1d1f'; 
+        ctx.font = 'bold 50px -apple-system, sans-serif';
+        const words = task.text.split(' '); let line = ''; let y = 520;
+        for(let n = 0; n < words.length; n++) {
+            let testLine = line + words[n] + ' '; let metrics = ctx.measureText(testLine);
+            if(metrics.width > 700 && n > 0) { ctx.fillText(line, 190, y); line = words[n] + ' '; y += 60; } 
+            else { line = testLine; }
+        }
+        ctx.fillText(line, 190, y);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '30px -apple-system, sans-serif';
+        ctx.fillText("Code Lesson: " + getCurrentProject().name, 140, 290);
+
+        const link = document.createElement('a'); link.download = `Lesson_Update_${task.id}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+    }
+
+    function init() { initTheme(); document.getElementById('projectName').value = getCurrentProject().name; updateTrashCounter(); render(); }
+    init();
 </script>
-
 </body>
 </html>
