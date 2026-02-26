@@ -10,8 +10,9 @@ Ein minimalistischer, im **Apple-Design** gehaltener Task-Planner. Entwickelt f�
 ---
 
 ## 📺 Preview
-> **Tipp:** Füge hier einen Screenshot deines Boards ein (z.B. `![Dashboard](screenshot.png)`), um die User sofort vom Apple-Design zu überzeugen!
-
+<p align="center">
+  <img src="screenshot.png" alt="Pro Dev Board Layout" width="800" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+</p>
 ---
 
 ## ✨ Highlights
