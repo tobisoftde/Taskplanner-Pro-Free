@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dev Board</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --glass: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --apple-blue: #007aff;
+            --apple-red: #ff3b30;
+            --apple-green: #34c759;
+            --apple-purple: #5856d6;
+            --text-main: #1d1d1f;
+            --text-muted: #86868b;
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 30px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        #projectName {
+            font-size: 34px;
+            font-weight: 800;
+            border: none;
+            background: transparent;
+            outline: none;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            transition: opacity 0.2s;
+        }
+        #projectName:focus { opacity: 0.7; }
+
+        .status-badge {
+            font-size: 13px;
+            font-weight: 500;
+            background: rgba(255,255,255,0.8);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--text-muted);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Board Layout */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .column {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: var(--radius-xl);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+            height: 100%;
+        }
+
+        .column-header {
+            padding: 20px 24px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+        }
+
+        .task-list {
+            padding: 0 20px 20px 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        /* Task Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            cursor: pointer; /* Changed to pointer for click focus */
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s;
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .card.dragging {
+            opacity: 0.6;
+            transform: scale(0.95);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-text { font-size: 16px; font-weight: 600; margin-bottom: 14px; line-height: 1.4; }
+
+        .card-meta { display: flex; justify-content: space-between; align-items: center; }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .tag-feature { background: #e0f2fe; color: #0284c7; }
+        .tag-bug { background: #fee2e2; color: #dc2626; }
+        .tag-refactor { background: #f3e8ff; color: #9333ea; }
+
+        .progress-indicator {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Inputs */
+        .add-zone { padding: 20px; border-top: 1px solid rgba(0,0,0,0.04); }
+        .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        
+        input[type="text"] {
+            width: 100%;
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            outline: none;
+            font-size: 14px;
+            transition: background 0.2s;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus { background: #fff; border-color: var(--apple-blue); }
+
+        select, button {
+            padding: 10px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0,0,0,0.1);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--apple-blue);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 10px 18px;
+        }
+        .btn-primary:hover { opacity: 0.9; }
+
+        /* Modal (Detail View) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal {
+            background: #fff;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+
+        .modal h2 { margin: 0; font-size: 22px; outline: none; }
+        
+        .modal textarea {
+            width: 100%;
+            min-height: 100px;
+            background: #f5f5f7;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* Checklist */
+        .checklist { display: flex; flex-direction: column; gap: 8px; }
+        .check-item { display: flex; align-items: center; gap: 10px; }
+        .check-item input[type="checkbox"] {
+            width: 18px; height: 18px;
+            accent-color: var(--apple-blue);
+            cursor: pointer;
+        }
+        .check-item span { font-size: 15px; }
+        .check-item.done span { text-decoration: line-through; color: var(--text-muted); }
+
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; }
+        .btn-close { background: #f2f2f7; color: var(--text-main); border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+        .btn-social { background: linear-gradient(135deg, #FF2D55 0%, #5856D6 100%); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+
+        .footer { position: fixed; bottom: 20px; right: 30px; display: flex; gap: 10px; }
+        .btn-ghost { background: var(--glass); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 13px; backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+
+<header>
+    <input type="text" id="projectName" value="Mein Dev Projekt" oninput="save()">
+    <span class="status-badge" id="saveStatus">Alles synchron</span>
+</header>
+
+<div class="board">
+    <div class="column" data-status="todo">
+        <div class="column-header">Nächste Schritte</div>
+        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="add-zone">
+            <div class="input-group">
+                <input type="text" id="input-todo" placeholder="Was steht an?" onkeypress="handleEnter(event, 'todo')">
+            </div>
+            <div class="input-group" style="margin-bottom:0">
+                <select id="tag-todo" style="flex-grow:1"><option value="feature">Feature</option><option value="bug">Bug</option><option value="refactor">Refactor</option></select>
+                <button class="btn-primary" onclick="addTask('todo')">Erstellen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="column" data-status="working">
+        <div class="column-header">In Arbeit</div>
+        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <div class="column" data-status="done">
+        <div class="column-header">Erledigt</div>
+        <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+</div>
+
+<div class="footer">
+    <button class="btn-ghost" onclick="exportJSON()">Backup speichern</button>
+    <button class="btn-ghost" onclick="document.getElementById('fileIn').click()">Backup laden</button>
+    <input type="file" id="fileIn" style="display:none" accept=".json" onchange="importJSON(event)">
+</div>
+
+<div class="modal-overlay" id="taskModal" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <h2 contenteditable="true" id="modalTitle" onblur="saveModal()">Task Titel</h2>
+        
+        <div>
+            <label style="font-size:12px; color:#86868b; font-weight:600; text-transform:uppercase; display:block; margin-bottom:8px;">Beschreibung</label>
+            <textarea id="modalDesc" placeholder="Füge Details, Notizen oder Snippets hinzu..." onblur="saveModal()"></textarea>
+        </div>
+
+        <div>
+            <label style="font-size:12px; color:#86868b; font-weight:600; text-transform:uppercase; display:block; margin-bottom:8px;">Checkliste</label>
+            <div class="checklist" id="modalChecklist"></div>
+            <div class="input-group" style="margin-top: 10px;">
+                <input type="text" id="newChecklistItem" placeholder="Neuer Teilschritt..." onkeypress="if(event.key==='Enter') addChecklistItem()">
+                <button class="btn-primary" onclick="addChecklistItem()">+</button>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-close" onclick="closeModal(true)">Schließen</button>
+            <button class="btn-social" onclick="generateSocialImage()">🎨 Social Image generieren</button>
+            <button class="btn-close" style="color:var(--apple-red); background:#fee2e2;" onclick="deleteCurrentTask()">Löschen</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let state = JSON.parse(localStorage.getItem('proDevBoard')) || {
+        name: "Mein Dev Projekt",
+        tasks: []
+    };
+    let currentOpenTaskId = null;
+
+    // --- Drag & Drop ---
+    function allowDrop(ev) { ev.preventDefault(); }
+    
+    function drag(ev) {
+        ev.dataTransfer.setData("taskId", ev.currentTarget.id);
+        ev.currentTarget.classList.add('dragging');
+    }
+    
+    function drop(ev) {
+        ev.preventDefault();
+        const taskId = ev.dataTransfer.getData("taskId").replace('task-', '');
+        const targetList = ev.target.closest('.task-list');
+        
+        if (targetList) {
+            const newStatus = targetList.parentElement.getAttribute('data-status');
+            const taskObj = state.tasks.find(t => t.id == taskId);
+            if (taskObj && taskObj.status !== newStatus) {
+                taskObj.status = newStatus;
+                save();
+                render();
+            }
+        }
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('dragging'));
+    }
+
+    // --- CRUD Tasks ---
+    function handleEnter(e, status) { if(e.key === 'Enter') addTask(status); }
+
+    function addTask(status) {
+        const input = document.getElementById(`input-${status}`);
+        const tag = document.getElementById(`tag-${status}`);
+        if (!input.value.trim()) return;
+
+        state.tasks.push({
+            id: Date.now(),
+            text: input.value,
+            tag: tag.value,
+            status: status,
+            desc: "",
+            checklist: []
+        });
+        
+        input.value = '';
+        save();
+        render();
+    }
+
+    // --- Modal Logic ---
+    function openModal(id) {
+        currentOpenTaskId = id;
+        const task = state.tasks.find(t => t.id === id);
+        
+        document.getElementById('modalTitle').innerText = task.text;
+        document.getElementById('modalDesc').value = task.desc || "";
+        renderChecklist(task);
+        
+        document.getElementById('taskModal').classList.add('active');
+    }
+
+    function closeModal(force = false) {
+        if (force || event.target.id === 'taskModal') {
+            saveModal();
+            document.getElementById('taskModal').classList.remove('active');
+            currentOpenTaskId = null;
+        }
+    }
+
+    function saveModal() {
+        if (!currentOpenTaskId) return;
+        const task = state.tasks.find(t => t.id === currentOpenTaskId);
+        if (task) {
+            task.text = document.getElementById('modalTitle').innerText;
+            task.desc = document.getElementById('modalDesc').value;
+            save();
+            render();
+        }
+    }
+
+    function deleteCurrentTask() {
+        if(confirm("Task wirklich löschen?")) {
+            state.tasks = state.tasks.filter(t => t.id !== currentOpenTaskId);
+            save();
+            render();
+            closeModal(true);
+        }
+    }
+
+    // --- Checklist Logic ---
+    function renderChecklist(task) {
+        const container = document.getElementById('modalChecklist');
+        container.innerHTML = '';
+        
+        (task.checklist || []).forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = `check-item ${item.done ? 'done' : ''}`;
+            div.innerHTML = `
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklist(${index})">
+                <span>${item.text}</span>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function addChecklistItem() {
+        const input = document.getElementById('newChecklistItem');
+        if (!input.value.trim() || !currentOpenTaskId) return;
+
+        const task = state.tasks.find(t => t.id === currentOpenTaskId);
+        if (!task.checklist) task.checklist = [];
+        
+        task.checklist.push({ text: input.value, done: false });
+        input.value = '';
+        save();
+        renderChecklist(task);
+        render();
+    }
+
+    function toggleChecklist(index) {
+        const task = state.tasks.find(t => t.id === currentOpenTaskId);
+        task.checklist[index].done = !task.checklist[index].done;
+        save();
+        renderChecklist(task);
+        render();
+    }
+
+    // --- Social Image Generation (Canvas) ---
+    function generateSocialImage() {
+        if (!currentOpenTaskId) return;
+        const task = state.tasks.find(t => t.id === currentOpenTaskId);
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = 1080;
+        canvas.height = 1080;
+        const ctx = canvas.getContext('2d');
+
+        // Draw Gradient Background
+        const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+        grad.addColorStop(0, '#007aff');
+        grad.addColorStop(1, '#5856d6');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1080, 1080);
+
+        // Draw Card
+        ctx.fillStyle = 'white';
+        ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        ctx.shadowBlur = 40;
+        ctx.beginPath();
+        ctx.roundRect(140, 340, 800, 400, 40);
+        ctx.fill();
+
+        // Draw Tag
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = task.tag === 'bug' ? '#fee2e2' : (task.tag === 'feature' ? '#e0f2fe' : '#f3e8ff');
+        ctx.beginPath();
+        ctx.roundRect(190, 390, 150, 50, 25);
+        ctx.fill();
+        
+        ctx.fillStyle = task.tag === 'bug' ? '#dc2626' : (task.tag === 'feature' ? '#0284c7' : '#9333ea');
+        ctx.font = 'bold 24px -apple-system, sans-serif';
+        ctx.fillText(task.tag.toUpperCase(), 215, 425);
+
+        // Draw Text
+        ctx.fillStyle = '#1d1d1f';
+        ctx.font = 'bold 50px -apple-system, sans-serif';
+        // Simple word wrap
+        const words = task.text.split(' ');
+        let line = '';
+        let y = 520;
+        for(let n = 0; n < words.length; n++) {
+            let testLine = line + words[n] + ' ';
+            let metrics = ctx.measureText(testLine);
+            if(metrics.width > 700 && n > 0) {
+                ctx.fillText(line, 190, y);
+                line = words[n] + ' ';
+                y += 60;
+            } else {
+                line = testLine;
+            }
+        }
+        ctx.fillText(line, 190, y);
+
+        // Draw Project Name
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.font = '30px -apple-system, sans-serif';
+        ctx.fillText("Code Lesson: " + state.name, 140, 290);
+
+        // Export
+        const link = document.createElement('a');
+        link.download = `Lesson_Update_${task.id}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
+    // --- Core Sync ---
+    function save() {
+        state.name = document.getElementById('projectName').value;
+        localStorage.setItem('proDevBoard', JSON.stringify(state));
+        
+        const badge = document.getElementById('saveStatus');
+        badge.innerText = 'Gespeichert: ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        badge.style.background = 'rgba(52, 199, 89, 0.2)'; // Flash green
+        setTimeout(() => badge.style.background = 'rgba(255,255,255,0.8)', 1000);
+    }
+
+    function render() {
+        const lists = document.querySelectorAll('.task-list');
+        lists.forEach(l => l.innerHTML = '');
+
+        state.tasks.forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.id = `task-${task.id}`;
+            card.draggable = true;
+            card.ondragstart = drag;
+            card.ondragend = (e) => e.target.classList.remove('dragging');
+            card.onclick = () => openModal(task.id);
+
+            const checkCount = task.checklist ? task.checklist.length : 0;
+            const checkDone = task.checklist ? task.checklist.filter(c => c.done).length : 0;
+            
+            let metaHtml = `<span class="tag tag-${task.tag}">${task.tag}</span>`;
+            if (checkCount > 0 || task.desc) {
+                metaHtml += `<div class="progress-indicator">
+                    ${task.desc ? '📝' : ''} 
+                    ${checkCount > 0 ? `☑️ ${checkDone}/${checkCount}` : ''}
+                </div>`;
+            }
+
+            card.innerHTML = `
+                <div class="card-text">${task.text}</div>
+                <div class="card-meta">${metaHtml}</div>
+            `;
+
+            const targetCol = document.querySelector(`.column[data-status="${task.status}"] .task-list`);
+            if (targetCol) targetCol.appendChild(card);
+        });
+    }
+
+    // --- JSON Backup ---
+    function exportJSON() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+        const link = document.createElement('a');
+        link.href = dataStr;
+        link.download = `DevBoard_${state.name}.json`;
+        link.click();
+    }
+
+    function importJSON(ev) {
+        const file = ev.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            state = JSON.parse(e.target.result);
+            document.getElementById('projectName').value = state.name;
+            save();
+            render();
+        };
+        reader.readAsText(file);
+    }
+
+    // Init
+    document.getElementById('projectName').value = state.name;
+    render();
+</script>
+
+</body>
+</html>
