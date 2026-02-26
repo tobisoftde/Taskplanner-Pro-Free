@@ -1,4 +1,4 @@
-# Taskplanner-Pro-Free
+# 🚀 Pro Dev Board – Local-First Kanban
 Task-Planner für Entwickler. 100 % kostenlos, 100 % privat, 100 % lokal.
 
 🚀 Pro Dev Board – Local-First Kanban
@@ -26,7 +26,7 @@ Ein minimalistischer, im Apple-Design gehaltener Task-Planner für Entwickler. 1
 
 Da dieses Projekt nur aus einer einzigen HTML-Datei besteht, ist keine Installation notwendig:
 
-    Klone das Repository: git clone https://github.com/Taskplanner-Pro-Free/pro-dev-board.git
+    Klone das Repository: git clone [https://github.com/Taskplanner-Pro-Free/pro-dev-board.git](https://github.com/tobisoftde/Taskplanner-Pro-Free.git)
 
     Öffne die index.html in einem beliebigen modernen Browser.
 
